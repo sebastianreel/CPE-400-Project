@@ -1,5 +1,5 @@
 # CPE 400: Final Project
-## Implement a File Transfer Application
+## Implement a File Transfer Application :tada:
 **Authors: _Sebastian Reel, Keegan Graf, Kim Meza Martinez_**
 
 Parameters for assignment:
