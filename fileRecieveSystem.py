@@ -19,7 +19,7 @@ s = socket.socket()
 
 s.bind((host, port))
 
-#s.listen(5)
+s.listen(5)
 print(f"[*] Listening as {host}:{port}")
 
 c_socket, address = s.accept()
@@ -38,10 +38,10 @@ with open(filename, "wb") as f:
             break
         f.write(b_read)
         
-currentDirectory = os.getcwd()			#create folder in current directory
+'''currentDirectory = os.getcwd()			#create folder in current directory
 directoryName = 'myfolder'
 path = os.path.join(currentDirectory, directoryName)
-os.mkdir(path) 
+os.mkdir(path) '''
 
 c_socket.close()
 s.close()
