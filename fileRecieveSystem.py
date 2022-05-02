@@ -10,10 +10,10 @@ import socket
 import os
 
 
-host = "0.0.0.0"
+host = socket.gethostname()
 port = 4891
 buffer = 4096
-sep = "<SEPARATOR>"
+sep = "||"
 
 s = socket.socket()
 
