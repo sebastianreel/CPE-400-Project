@@ -14,12 +14,8 @@ BUFFER_SIZE = 1024 * 4
 
 def sendFile(dirname, host, port):
 	
-	s = socket.socket()
-	
-	print(f"[+] Connecting to {host}:{port}")
-	s.connect((host, port))
-	print("[+] Connected.")
-			#sends dirname & size
+
+	#sends dirname & size
 	stuff = os.getcwd()
 	inStuff = os.listdir(stuff)
 	if dirname in inStuff:
@@ -27,7 +23,11 @@ def sendFile(dirname, host, port):
 		for i in range(len(items)):
 			pathy = os.path.join(stuff, dirname)
 			pathx = os.path.join(pathy, items[i])
-			print(pathx)
+			s = socket.socket()
+			
+			print(f"[+] Connecting to {host}:{port}")
+			s.connect((host, port))
+			print("[+] Connected.")			
 			filesize = os.path.getsize(pathx)
 			s.send(f"{pathx}{SEPERATOR}{filesize}".encode())
 			with open (pathx, "rb") as f:
@@ -40,12 +40,11 @@ def sendFile(dirname, host, port):
 	s.close()
 def main():
 	parser = argparse.ArgumentParser(description="Simple File Sender")
-	parser.add_argument("dir", help="Directory name to send")
-	parser.add_argument("-p", "--port", help="Port to use, default is 5001", default=4891)
+	parser.add_argument("directory", help="Directory name to send")
 	args = parser.parse_args()
-	dirname = args.dir
+	dirname = args.directory
 	host = socket.gethostname()
-	port = args.port
+	port = 4891
 	sendFile(dirname, host, port)
 if __name__ in "__main__":
 	main()
