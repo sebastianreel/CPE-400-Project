@@ -11,6 +11,7 @@ import os
 import argparse
 
 BUFFER_SIZE = 1024 * 4 
+format = "utf-8"
 
 # SENDFILE FUNCTIONALITY
 def sendFile(dirname, host, port):
@@ -32,14 +33,18 @@ def sendFile(dirname, host, port):
 			s = socket.socket()
 			
 			# show what host name and port that the user is connecting to then connect them
-			print(f"[*] Connecting to {host}:{port}")
+			print(f"[*] Client: Connecting to {host}:{port}...")
 			s.connect((host, port))
-			print("[+] Connected.")
+			print("[+] Client: Connected.")
 
 			# get the filesize of each of the files within the "send" directory
 			filesize = os.path.getsize(pathx)
+			print(f"[+] File name: '{items[i]}'")
+			print(f"[+] File size: {filesize}")
+			print(f"[*] Client: Attempting to send {items[i]} file to server...")
 			s.send(f"Pathway: {pathx} || {filesize} bytes".encode())
-		
+			message = s.recv(BUFFER_SIZE).decode(format)
+			print(f"[+] Server: {message}.")
 			#
 			# add code documentation here
 			with open (pathx, "rb") as f:
@@ -47,7 +52,11 @@ def sendFile(dirname, host, port):
 					bytesRead = f.read(BUFFER_SIZE)
 					if not bytesRead:
 						break	#file transmit done
+					print(f"[*] Client: Attempting to send {items[i]} data to server...")
 					s.sendall(bytesRead)		#assures transmission in busy networks
+					dataInfo = s.recv(BUFFER_SIZE).decode(format)
+					print(f"[+] Server: {dataInfo}.")
+			print("[#]---------------------------------------------------[#]")
 	s.close()
 
 

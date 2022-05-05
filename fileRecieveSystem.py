@@ -15,6 +15,7 @@ import os
 host = socket.gethostname()
 # Define a base port to connect to
 port = 4891
+format = "utf-8"
 # The file size amount that the reciever will accept (in bytes)
 buffer = 4096
 count = 0
@@ -25,6 +26,7 @@ s = socket.socket()
 s.bind((host, port))
 s.listen(10)
 print(f"[*] Listening as {host}:{port}")
+
 
 # RECEIVE FUNCTIONALITY
 # run through a loop, this way multiple files can be passed through with one run
@@ -40,7 +42,8 @@ while count != 5:
     filename, filesize = received.split("||")
     # take the name and only take the final component of the path name, which is a function the "os" library uses.
     # this library is useful for being able to easily connect pathways and parse through directories faster
-    filename = os.path.basename(filename)
+    filename = os.path.basename(filename).replace(" ", "")
+    c_socket.send(f"File '{filename}' recieved".encode(format))
     # make the filesize, a string within a list of strings, an int instead
     # filesize = int(filesize)
     print("[+] File name: " + filename)
@@ -70,6 +73,7 @@ while count != 5:
             if not b_read:
                 break
             f.write(b_read)
+            c_socket.send(f"File '{filename}' data recieved".encode(format))
  
     c_socket.close()
     
