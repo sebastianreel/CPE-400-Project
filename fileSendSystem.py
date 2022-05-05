@@ -39,8 +39,8 @@ def sendFile(dirname, host, port):
 
 			# get the filesize of each of the files within the "send" directory
 			filesize = os.path.getsize(pathx)
-			print(f"[+] File name: '{items[i]}'")
-			print(f"[+] File size: {filesize}")
+			print(f"[+] Client: File name: '{items[i]}'")
+			print(f"[+] Client: File size: {filesize}")
 			print(f"[*] Client: Attempting to send file '{items[i]}' to server...")
 			s.send(f"Pathway: {pathx} || {filesize} bytes".encode())
 			message = s.recv(BUFFER_SIZE).decode(format)
