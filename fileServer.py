@@ -8,7 +8,7 @@
 # import specific libraries from Python to use for the receiving functionality
 import socket
 import os
-
+import time
 # VARIABLES
 # First grab the host computer name to use when identifying what is being listened and connected to
 host = socket.gethostname()
@@ -41,7 +41,8 @@ while count != 5:
 
     print(f"[*] Server: Listening for file...")
     # First, look at what the socket recieved in terms of the directory path and size of the file being moved.
-    received = c_socket.recv(buffer).decode()    
+    received = c_socket.recv(buffer).decode()
+    start_time = time.time()    
     # split the new string into two seperate string lists, with the filename and filesize
     filename, filesize = received.split("||")
     # take the name and only take the final component of the path name, which is a function the "os" library uses.
@@ -70,11 +71,13 @@ while count != 5:
     
     # CASE FOR IF THERE IS DATA BEING RECIEVED
     # create a joiner variable that joins the path to the filename, so we can view and edit the contents within
-    print(f"[*] Server: Attempting '{filename}' file transfer...")
+    print(f"[*] Server: Attempting file '{filename}' transfer...")
     joiner = os.path.join(path, filename)
     # open the file that is now conencted to the new path that we defined
     with open(joiner, "wb") as f:
-        print("[+] Server: File transfer complete.")
+        print(f"[+] Server: File '{filename}' transfer complete.")
+        tTime = time.time() - start_time
+        print(f"[++] Server: File '{filename}' took {tTime:.7f} seconds to transfer")
         # define a loop that looks at the contents within the file
         while True:
             b_read = c_socket.recv(buffer)
@@ -83,10 +86,12 @@ while count != 5:
                 break
             # if there is data that was in the clients file, write it back into the servers version of the file
             # then send to the client that the data was recieved at the server level
-            print(f"[*] Server: Attempting '{filename}' file data transfer...")
+            print(f"[*] Server: Attempting file '{filename}' data transfer...")
             f.write(b_read)
-            c_socket.send(f"'{filename}' file data recieved".encode(format))
+            dTime = time.time() - start_time
+            c_socket.send(f"File '{filename}' data recieved".encode(format))
             print(f"[+] Server: '{filename}' file data transfer complete.")
+            print(f"[++] Server: File data '{filename}' took {tTime:.7f} seconds to transfer")
     print("[#]---------------------------------------------------[#]")
     c_socket.close()
     
