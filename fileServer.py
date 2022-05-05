@@ -26,10 +26,9 @@ count = 0
 
 
 # RECEIVE FUNCTIONALITY
-# run through a loop, this way multiple files can be passed through with one run
+# This function will start giving a new thread each time a connection is made.
 def threadFunction(c_socket, address):
  
-    # after the "fileSendSystem" program has been run, then this loop will be activated
     # the IP address will be defined and connected to the socket defined before
     print(f"[+] Client: {address} is connected.")
 
@@ -93,13 +92,14 @@ def threadFunction(c_socket, address):
     # set a condition to where the program ends if the number of files has been successfully reached
 
 def main():
+    # Makes socket, binds to ip, and listens for files to come in.
     print("\t    ===== FILE TRANSFER APPLICATION =====")
     s = socket.socket()
     s.bind((host, port))
     s.listen(10)
     print(f"[*] Server: Listening as {host}:{port}...")
     print("[#]---------------------------------------------------[#]")
-
+    # Starts multithreading that is used for each socket starting a new connection
     while True:
         c_socket, address = s.accept()
         x = threading.Thread(target=threadFunction, args=(c_socket, address))
