@@ -63,15 +63,14 @@ while count != 5:
     
     #
     # add code documentation here
-    with open(filename, "wb") as f:
-        joiner = os.path.join(path, filename)
-
+    joiner = os.path.join(path, filename)
+    with open(joiner, "wb") as f:
         while True:
             b_read = c_socket.recv(buffer)
-            print(b_read)
             if not b_read:
                 break
             f.write(b_read)
+ 
     c_socket.close()
     
     # iterate upwards and count to the number of files in the directory (5 in this case)
