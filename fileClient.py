@@ -14,7 +14,7 @@ BUFFER_SIZE = 1024 * 4
 format = "utf-8"
 
 # SENDFILE FUNCTIONALITY
-def sendFile(dirname):
+def sendFile(dirname, aFiles):
 	host = socket.gethostname()
 	port = 4891
 	# get the current directory and the items within it
@@ -84,20 +84,21 @@ def main():
 	# add an arguement for giving the user information on how to run the program correctly
 	parser = argparse.ArgumentParser(description = "Simple File Sender")
 	parser.add_argument("directory", help="Directory name to send")
-	#
+	parser.add_argument("files", help="Amount of files to send")
 	# add arguement for multithreading and doing mulitple concurrency or just 1
 	#
 	
 	# parse through what the user enters the correct item (in this case a directory name)
 	args = parser.parse_args()
 	dirname = args.directory
+	aFiles = args.files
 
 	# gett he host and define the same port id for using in sending files
 
 	# call the function for sending files nad pass through the directory entered, the host name, and the port id to use in the functionality
 	print("\t    ===== FILE TRANSFER APPLICATION =====")
 	print("[#]---------------------------------------------------[#]")
-	sendFile(dirname)
+	sendFile(dirname, aFiles)
 	print("\t    ===== FILE TRANSFER COMPLETE =====")
 
 if __name__ in "__main__":

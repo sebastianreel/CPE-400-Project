@@ -9,6 +9,7 @@
 import socket
 import os
 import time
+import threading
 # VARIABLES
 # First grab the host computer name to use when identifying what is being listened and connected to
 host = socket.gethostname()
@@ -19,24 +20,17 @@ format = "utf-8"
 buffer = 4096
 count = 0
 
-print("\t    ===== FILE TRANSFER APPLICATION =====")
-
 
 # Define a socket, where the system will bind the host to the port and listen constantly
 # Then, print out that the server is being listened to, so that that the Send System can successfully work.
-s = socket.socket()
-s.bind((host, port))
-s.listen(10)
-print(f"[*] Server: Listening as {host}:{port}...")
-print("[#]---------------------------------------------------[#]")
 
 
 # RECEIVE FUNCTIONALITY
 # run through a loop, this way multiple files can be passed through with one run
-while count != 5:
+def threadFunction(c_socket, address):
+ 
     # after the "fileSendSystem" program has been run, then this loop will be activated
     # the IP address will be defined and connected to the socket defined before
-    c_socket, address = s.accept()
     print(f"[+] Client: {address} is connected.")
 
     print(f"[*] Server: Listening for file...")
@@ -97,7 +91,19 @@ while count != 5:
     
     # iterate upwards and count to the number of files in the directory (5 in this case)
     # set a condition to where the program ends if the number of files has been successfully reached
-    count+=1
-    if count == 5:
-        print("\t    ===== FILE TRANSFER COMPLETE =====")
-        exit()
+
+def main():
+    print("\t    ===== FILE TRANSFER APPLICATION =====")
+    s = socket.socket()
+    s.bind((host, port))
+    s.listen(10)
+    print(f"[*] Server: Listening as {host}:{port}...")
+    print("[#]---------------------------------------------------[#]")
+
+    while True:
+        c_socket, address = s.accept()
+        x = threading.Thread(target=threadFunction, args=(c_socket, address))
+        x.start()
+
+if __name__ == "__main__":
+    main()
