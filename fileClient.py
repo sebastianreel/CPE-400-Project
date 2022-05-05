@@ -69,7 +69,6 @@ def sendFile(dirname, host, port):
 						break	#file transmit done
 
 					# with data in the file, have a statement confirming that there is an attempt being made to send file data over to the server
-					print(f"[*] Client: Attempting to send file '{items[i]}' data to server...")
 					s.sendall(bytesRead)
 
 					# print the message from the recieve to check on the CLIENT side that the file data was recieved. 
