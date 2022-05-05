@@ -20,11 +20,6 @@ format = "utf-8"
 buffer = 4096
 count = 0
 
-
-# Define a socket, where the system will bind the host to the port and listen constantly
-# Then, print out that the server is being listened to, so that that the Send System can successfully work.
-
-
 # RECEIVE FUNCTIONALITY
 # run through a loop, this way multiple files can be passed through with one run
 def threadFunction(c_socket, address):
@@ -35,7 +30,8 @@ def threadFunction(c_socket, address):
 
     print(f"[*] Server: Listening for file...")
     # First, look at what the socket recieved in terms of the directory path and size of the file being moved.
-    received = c_socket.recv(buffer).decode()
+    received = c_socket.recv(buffer).decode() 
+    # define the beginning time that the program starts at, which should be 0, so that it can be later calculated
     start_time = time.time()    
     # split the new string into two seperate string lists, with the filename and filesize
     filename, filesize = received.split("||")
@@ -70,6 +66,7 @@ def threadFunction(c_socket, address):
     # open the file that is now conencted to the new path that we defined
     with open(joiner, "wb") as f:
         print(f"[+] Server: File '{filename}' transfer complete.")
+        # run the time calculation for just the file and see how long it takes to transfer
         tTime = time.time() - start_time
         print(f"[++] Server: File '{filename}' took {tTime:.7f} seconds to transfer")
         # define a loop that looks at the contents within the file
@@ -82,10 +79,11 @@ def threadFunction(c_socket, address):
             # then send to the client that the data was recieved at the server level
             print(f"[*] Server: Attempting file '{filename}' data transfer...")
             f.write(b_read)
+            # define a new calculated time for jsut the data, and then print out how long it took for the data to transfer
             dTime = time.time() - start_time
             c_socket.send(f"File '{filename}' data recieved".encode(format))
             print(f"[+] Server: '{filename}' file data transfer complete.")
-            print(f"[++] Server: File data '{filename}' took {tTime:.7f} seconds to transfer")
+            print(f"[++] Server: File data '{filename}' took {dTime:.7f} seconds to transfer")
     print("[#]---------------------------------------------------[#]")
     c_socket.close()
     
