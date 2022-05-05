@@ -10,11 +10,13 @@ import socket
 import os
 import argparse
 
-BUFFER_SIZE = 1024 * 4 
+BUFFER_SIZE = 1024 * 4
 format = "utf-8"
 
 # SENDFILE FUNCTIONALITY
-def sendFile(dirname, host, port):
+def sendFile(dirname):
+	host = socket.gethostname()
+	port = 4891
 	# get the current directory and the items within it
 	cwd = os.getcwd()
 	incwd = os.listdir(cwd)
@@ -57,7 +59,6 @@ def sendFile(dirname, host, port):
 			
 			# CASE FOR IF THERE IS DATA IN THE FILE
 			# open the file that is conencted to the path directory first
-			# WHAT IS RB ???
 			with open (pathx, "rb") as f:
 				# define a loop that will read through the contents of the file after it has been opened
 				while True:
@@ -92,13 +93,11 @@ def main():
 	dirname = args.directory
 
 	# gett he host and define the same port id for using in sending files
-	host = socket.gethostname()
-	port = 4891
 
 	# call the function for sending files nad pass through the directory entered, the host name, and the port id to use in the functionality
 	print("\t    ===== FILE TRANSFER APPLICATION =====")
 	print("[#]---------------------------------------------------[#]")
-	sendFile(dirname, host, port)
+	sendFile(dirname)
 	print("\t    ===== FILE TRANSFER COMPLETE =====")
 
 if __name__ in "__main__":

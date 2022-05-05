@@ -7,7 +7,6 @@
 
 # import specific libraries from Python to use for the receiving functionality
 import socket
-import threading
 import os
 
 # VARIABLES
