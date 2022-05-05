@@ -41,7 +41,7 @@ def sendFile(dirname, host, port):
 			filesize = os.path.getsize(pathx)
 			print(f"[+] File name: '{items[i]}'")
 			print(f"[+] File size: {filesize}")
-			print(f"[*] Client: Attempting to send {items[i]} file to server...")
+			print(f"[*] Client: Attempting to send file '{items[i]}' to server...")
 			s.send(f"Pathway: {pathx} || {filesize} bytes".encode())
 			message = s.recv(BUFFER_SIZE).decode(format)
 			print(f"[+] Server: {message}.")
@@ -52,7 +52,7 @@ def sendFile(dirname, host, port):
 					bytesRead = f.read(BUFFER_SIZE)
 					if not bytesRead:
 						break	#file transmit done
-					print(f"[*] Client: Attempting to send {items[i]} data to server...")
+					print(f"[*] Client: Attempting to send file '{items[i]}' data to server...")
 					s.sendall(bytesRead)		#assures transmission in busy networks
 					dataInfo = s.recv(BUFFER_SIZE).decode(format)
 					print(f"[+] Server: {dataInfo}.")
