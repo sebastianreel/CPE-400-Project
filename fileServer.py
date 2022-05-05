@@ -20,21 +20,24 @@ format = "utf-8"
 buffer = 4096
 count = 0
 
+print("\t    ===== FILE TRANSFER APPLICATION =====")
+print("[#]---------------------------------------------------[#]")
+
 # Define a socket, where the system will bind the host to the port and listen constantly
 # Then, print out that the server is being listened to, so that that the Send System can successfully work.
 s = socket.socket()
 s.bind((host, port))
 s.listen(10)
-print(f"[*] Listening as {host}:{port}")
+print(f"[*] Server: Listening as {host}:{port}...")
 
 
 # RECEIVE FUNCTIONALITY
 # run through a loop, this way multiple files can be passed through with one run
 while count != 5:
     # after the "fileSendSystem" program has been run, then this loop will be activated
-    # the address will be defined and connected to the socket defined before
+    # the IP address will be defined and connected to the socket defined before
     c_socket, address = s.accept()
-    print(f"[+] {address} is connected.")
+    print(f"[+] Server: {address} is connected.")
 
     # First, look at what the socket recieved in terms of the directory path and size of the file being moved.
     received = c_socket.recv(buffer).decode()    
@@ -46,8 +49,8 @@ while count != 5:
     c_socket.send(f"File '{filename}' recieved".encode(format))
     # make the filesize, a string within a list of strings, an int instead
     # filesize = int(filesize)
-    print("[+] File name: " + filename)
-    print("[+] File size:" + filesize)
+    print(f"[+] Server: File name: '{filename}'")
+    print(f"[+] Server: File size: {filesize}")
     
     # get the current directory that the user is on within their current device
     currentDirectory = os.getcwd()
@@ -64,21 +67,37 @@ while count != 5:
     else:
         path = os.path.join(currentDirectory, directoryName)
     
-    #
-    # add code documentation here
+    # CASE FOR IF THERE IS DATA BEING RECIEVED
+    # create a joiner variable that joins the path to the filename, so we can view and edit the contents within
     joiner = os.path.join(path, filename)
+    # open the file that is now conencted to the new path that we defined
     with open(joiner, "wb") as f:
+        # define a loop that looks at the contents within the file
         while True:
             b_read = c_socket.recv(buffer)
+            # if there is no data, stop the loop and move on to close the socket
             if not b_read:
                 break
+            #
+            #
+            # keegan help pls
+            #
+            #
+            # print(f"[*] Server: Attempting to recieve file '{filename}' data from client...")
+            # data = s.recv(buffer).decode(format)
+            # print(f"[+] Client: {data}.")
+
+            # if there is data that was in the clients file, write it back into the servers version of the file
+            # then send to the client that the data was recieved at the server level
             f.write(b_read)
             c_socket.send(f"File '{filename}' data recieved".encode(format))
- 
+ 	
+    print("[#]---------------------------------------------------[#]")
     c_socket.close()
     
     # iterate upwards and count to the number of files in the directory (5 in this case)
     # set a condition to where the program ends if the number of files has been successfully reached
     count+=1
     if count == 5:
+        print("\t    ===== FILE TRANSFER COMPLETE =====")
         exit()

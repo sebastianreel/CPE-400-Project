@@ -39,21 +39,40 @@ def sendFile(dirname, host, port):
 
 			# get the filesize of each of the files within the "send" directory
 			filesize = os.path.getsize(pathx)
+			
+			# Take the files names withing the clients directory and print them out to see that they are integral and ready to send
+			# also take the file size in bytes and print them for integrity checking at the beginning (and end)
 			print(f"[+] Client: File name: '{items[i]}'")
 			print(f"[+] Client: File size: {filesize}")
+			
+			# now pritn a statement attempting to send said file to the server
+			# then send the socket with the file path and filesize to the server
 			print(f"[*] Client: Attempting to send file '{items[i]}' to server...")
 			s.send(f"Pathway: {pathx} || {filesize} bytes".encode())
+
+			# the message will look to the server to see if the file was recieved, and then print out what exactly was recieved. 
+			# the print for "message" will be found in the server, where the file is specified and sent back over the the client of what sent (basically lets the client know that the file was recieved)
 			message = s.recv(BUFFER_SIZE).decode(format)
 			print(f"[+] Server: {message}.")
-			#
-			# add code documentation here
+			
+			# CASE FOR IF THERE IS DATA IN THE FILE
+			# open the file that is conencted to the path directory first
+			# WHAT IS RB ???
 			with open (pathx, "rb") as f:
+				# define a loop that will read through the contents of the file after it has been opened
 				while True:
+					# define a variable defined in bytes that reads the file within the buffersize constraint defined as a global variable
 					bytesRead = f.read(BUFFER_SIZE)
+					
+					# if there isnt anything in the file, then simply stop the loop and close skip to closing the socket
 					if not bytesRead:
 						break	#file transmit done
+
+					# with data in the file, have a statement confirming that there is an attempt being made to send file data over to the server
 					print(f"[*] Client: Attempting to send file '{items[i]}' data to server...")
-					s.sendall(bytesRead)		#assures transmission in busy networks
+					s.sendall(bytesRead)
+
+					# print the message from the recieve to check on the CLIENT side that the file data was recieved. 
 					dataInfo = s.recv(BUFFER_SIZE).decode(format)
 					print(f"[+] Server: {dataInfo}.")
 			print("[#]---------------------------------------------------[#]")
@@ -65,6 +84,9 @@ def main():
 	# add an arguement for giving the user information on how to run the program correctly
 	parser = argparse.ArgumentParser(description = "Simple File Sender")
 	parser.add_argument("directory", help="Directory name to send")
+	#
+	# add arguement for multithreading and doing mulitple concurrency or just 1
+	#
 	
 	# parse through what the user enters the correct item (in this case a directory name)
 	args = parser.parse_args()
@@ -75,7 +97,10 @@ def main():
 	port = 4891
 
 	# call the function for sending files nad pass through the directory entered, the host name, and the port id to use in the functionality
+	print("\t    ===== FILE TRANSFER APPLICATION =====")
+	print("[#]---------------------------------------------------[#]")
 	sendFile(dirname, host, port)
+	print("\t    ===== FILE TRANSFER COMPLETE =====")
 
 if __name__ in "__main__":
 	main()
